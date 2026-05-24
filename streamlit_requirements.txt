@@ -1,0 +1,11 @@
+streamlit
+fastapi
+uvicorn[standard]
+pandas
+numpy
+scikit-learn
+joblib
+sentence-transformers
+torch
+rapidfuzz
+
