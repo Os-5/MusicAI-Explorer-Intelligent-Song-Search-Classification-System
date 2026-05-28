@@ -1,53 +1,11 @@
-MusicAI Explorer
-
-MusicAI Explorer is a Streamlit-based music search and classification app that uses NLP embeddings, fuzzy matching, and machine learning to explore a music dataset in an interactive way.
-
-Features
-Hybrid search using NLP (semantic) and fuzzy matching
-Search songs by title, artist, label, or cluster (supports typos)
-Machine learning model for music classification
-Lyrics viewer for each song
-Fast performance using caching
-Modern Streamlit UI
-Tech Stack
-Python
-Streamlit
-Pandas
-NumPy
-Scikit-learn
-SentenceTransformers
-RapidFuzz
-Joblib
-Project Structure
-
-MusicAI/
-
-app.py
-songs_clustered.csv
-best_model.pkl
-embedding_model.pkl
-requirements.txt
-Installation
-Clone the repository:
-git clone https://github.com/USERNAME/REPO_NAME.git
-cd REPO_NAME
-Install dependencies:
-pip install -r requirements.txt
-Run the App
-
-streamlit run app.py
-
-Then open:
-http://localhost:8501
-
-How It Works
-User enters a search query
-System uses NLP embeddings + fuzzy matching to find best results
-Results are ranked using a custom scoring system
-ML model predicts music category from lyrics or text input
-UI displays songs with metadata and lyrics view
-Example Use Cases
-Search songs with typos (e.g. “shackira”)
-Find songs by mood or description
-Explore dataset by labels or clusters
-Classify lyrics into categories
+🎵 Intelligent Music Discovery & Recommendation SystemAn end-to-end Machine Learning pipeline and interactive web application that classifies, clusters, and matches songs using natural language processing (NLP). The platform allows users to find music using traditional text-matching metadata patterns or semantic lyric analysis powered by Sentence Transformers.🚀 FeaturesDual-Engine Search Mode:Fuzzy Matching / Text Search: Powered by rapidfuzz token-ratio matching across song names, artists, categories, and clusters.NLP Semantic Search: Encodes queries on-the-fly and runs cosine similarity math against a pre-computed sentence embedding matrix.Song Classification UI: Submit custom lyrics, titles, or general descriptions via an intuitive input form to dynamically embed textual data and trigger real-time category classification.High-Performance Caching: Leverages Streamlit’s @st.cache_resource and @st.cache_data structures to maintain immediate execution across vast dataset lookups.Spotify-Inspired Aesthetics: Custom-injected CSS styling layered with glowing background radial gradients, responsive result rows, custom inline metrics, and direct YouTube reference links.📂 Project ArchitectureCode snippet├── music recommendation system2.ipynb   # Data ingestion, preprocessing, & training pipeline
+├── streamlit_app.py                      # Interactive UI and deployment-ready search app
+├── best_model.pkl                       # Serialized optimal classification model
+├── embedding_model.pkl                  # Serialized SentenceTransformer encoder model
+└── songs_clustered.csv                  # Main dataset containing song profiles and metrics
+⚙️ Data Pipeline & Model TrainingThe foundational processing outlined in the Jupyter Notebook splits structural preparation into explicit stages:Preprocessing & Tokenization: Ingests your primary track collection (spotify_millsongdata.csv), cleans lyric bodies using regex formatting, normalizes spacing, strips boilerplate English NLTK stopwords, and normalizes lemmas via a WordNetLemmatizer loop.Feature Engineering / Embeddings: Implements sentence vector extraction utilizing the SentenceTransformer framework (all-MiniLM-L6-v2) to turn lyrics into numerical representations.Model Selection: Benchmarks diverse classification classifiers, optimizes baseline validation performance, and exports the final model stack via joblib for application inference.🛠️ Installation & SetupPrerequisitesEnsure your localized system runs Python 3.9+ environments.1. Clone the RepositoryBashgit clone https://github.com/your-username/music-recommendation-system.git
+cd music-recommendation-system
+2. Install DependenciesInstall the required packages using pip:Bashpip install streamlit pandas numpy joblib scikit-learn sentence-transformers rapidfuzz nltk
+3. Initialize NLP CorporaDownload the necessary NLTK components used in text normalization:Bashpython -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet')"
+🖥️ Running the ApplicationPlace your generated data and serialized files (songs_clustered.csv, best_model.pkl, and embedding_model.pkl) into the root path directory alongside the app script. Start the application by executing:Bashstreamlit run streamlit_app.py
+💡 How It WorksFuzzy Score CalculationFuzzy lookups assess query values by weighting text fields differently to prioritize highly relevant metadata fields over general content:$$\text{Score} = \max \begin{cases}\text{FuzzRatio}(\text{Query}, \text{Song}) \times 1.40 \\text{FuzzRatio}(\text{Query}, \text{Artist}) \times 1.25 \\text{FuzzRatio}(\text{Query}, \text{Label}) \times 1.10 \\text{FuzzRatio}(\text{Query}, \text{Cluster}) \times 1.00\end{cases}$$Semantic NLP RankingWhen utilizing NLP semantic mode, the system constructs a dense vector representation of your query and computes a normalized dot product matrix calculation across track indices:$$\text{Rank} = (\text{Cosine Similarity} \times 60) + (\text{Fuzzy Metadata Boost} \times 0.40)$$This blend provides deep conceptual matching based on mood or lyrics while keeping structural keywords relevant.
